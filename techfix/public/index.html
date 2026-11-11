@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TechFix — Computer Troubleshooting Assistant | Paliparan 3 SHS</title>
+<meta name="description" content="TechFix is a web-based troubleshooting assistant for common hardware, software, networking and peripheral problems, designed for Grade 11 and Grade 12 CSS students.">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<!-- Social preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="TechFix — Computer Troubleshooting Assistant">
+<meta property="og:description" content="Step-by-step guides for common hardware, software, networking, and peripheral problems. A Grade 12 CSS research prototype for Grade 11 and Grade 12 CSS students at Paliparan 3 SHS.">
+<meta property="og:image" content="icon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TechFix — Computer Troubleshooting Assistant">
+<meta name="twitter:description" content="Step-by-step guides for common computer problems. A Grade 12 CSS research prototype for CSS students at Paliparan 3 SHS.">
+<style>
+:root{
+  --blue:#2563eb;--blue2:#1d4ed8;--blue-soft:#eef4ff;--blue-border:#bfdbfe;
+  --navy:#0f172a;--navy2:#1e293b;
+  --muted:#64748b;--muted2:#94a3b8;
+  --border:#e2e8f0;--border2:#edf1f7;
+  --bg:#f6f8fc;--card:#ffffff;
+  --amber-bg:#fffbeb;--amber-bd:#fde68a;--amber-tx:#92400e;
+  --green-bg:#f0fdf4;--green-bd:#bbf7d0;--green-tx:#166534;
+  --red:#e11d48;--red-soft:#fff1f2;--red-bd:#fecdd3;
+  --radius:16px;--radius-lg:22px;
+  --shadow:0 4px 24px rgba(15,23,42,.07);--shadow2:0 8px 32px rgba(15,23,42,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--navy);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+img{max-width:100%}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 5%;}
+.logo{font-weight:900;font-size:22px;letter-spacing:-.5px;color:var(--blue);display:flex;align-items:center;gap:8px}
+.logo span{color:var(--navy)}
+.logo i{width:32px;height:32px;border-radius:9px;background:var(--navy);color:#fff;display:grid;place-items:center;font-style:normal;font-size:15px}
+nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+nav button{border:1px solid transparent;background:none;padding:8px 13px;border-radius:99px;color:var(--muted);cursor:pointer;font-weight:600;font-size:13.5px;transition:.15s;white-space:nowrap}
+nav button:hover{background:var(--blue-soft);color:var(--blue)}
+nav button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.hamburger{display:none;border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px;cursor:pointer}
+@media(max-width:900px){
+  nav{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);padding:10px 5%;flex-direction:column;align-items:stretch}
+  nav.open{display:flex}
+  nav button{text-align:left;border-radius:10px}
+  .hamburger{display:block}
+  header{padding:10px 4%}
+}
+
+/* LAYOUT */
+main{max-width:1120px;margin:0 auto;padding:28px 20px 40px}
+.view{display:none;animation:fade .22s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-head{margin:28px 0 14px}
+.section-head h2{margin:0;font-size:26px;letter-spacing:-.6px}
+.section-head p{margin:4px 0 0;color:var(--muted)}
+.muted{color:var(--muted)}
+.small{font-size:12.5px;color:var(--muted)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);color:#fff;border-radius:24px;padding:36px;display:grid;grid-template-columns:1.45fr .75fr;gap:26px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -60px -60px auto;width:260px;height:260px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.14), transparent 65%);border-radius:50%;pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:99px;font-size:12.5px;font-weight:600;backdrop-filter:blur(6px)}
+.hero h1{font-size:clamp(34px,5.2vw,52px);line-height:.95;letter-spacing:-1.2px;margin:12px 0 10px}
+.hero p{color:#dbeafe;line-height:1.6;margin:0 0 18px;max-width:54ch}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:12px 16px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:14px;transition:.15s;justify-content:center}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--blue);color:#fff;box-shadow:0 6px 18px rgba(37,99,235,.35)}
+.btn.primary:hover{background:var(--blue2)}
+.btn.light{background:#fff;color:var(--navy)}
+.btn.light:hover{background:#f1f5f9}
+.btn.ghost{background:#fff;border:1px solid var(--border);color:var(--navy)}
+.btn.ghost:hover{background:var(--bg)}
+.btn.small{padding:8px 12px;font-size:13px;border-radius:9px}
+.hero-card{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:18px;backdrop-filter:blur(8px)}
+.hero-card .kpi{display:flex;align-items:baseline;gap:8px;margin:6px 0}
+.hero-card b{font-size:34px;line-height:1}
+.hero-card hr{border:0;border-top:1px solid rgba(255,255,255,.18);margin:14px 0}
+.hero-mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.hero-mini div{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:10px;text-align:center}
+.hero-mini strong{display:block;font-size:18px}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding:26px 20px}.hero h1{font-size:36px}}
+
+/* CARDS & GRID */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:860px){.grid{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card.hover:hover{box-shadow:var(--shadow2);transform:translateY(-1px);transition:.15s}
+.icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:var(--blue-soft);border:1px solid var(--blue-border)}
+.chip{border:1px solid var(--border);background:#fff;border-radius:99px;padding:7px 13px;cursor:pointer;font-weight:600;font-size:13px;color:var(--muted);transition:.15s}
+.chip:hover{border-color:var(--blue-border);color:var(--blue)}
+.chip.active{background:var(--blue-soft);border-color:var(--blue-border);color:var(--blue)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.search{display:flex;gap:10px;margin:16px 0}
+.search input{flex:1;border:1px solid var(--border);border-radius:11px;padding:13px 14px;font-size:14px;outline:none;background:#fff}
+.search input:focus{border-color:var(--blue-border);box-shadow:0 0 0 4px var(--blue-soft)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:10px 0 14px}
+
+/* PROBLEM CARD */
+.problem{position:relative;display:flex;flex-direction:column}
+.problem h3{margin:10px 0 6px;font-size:16px;letter-spacing:-.2px}
+.problem p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.5;flex:1}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:11px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:5px 8px;border-radius:99px;border:1px solid var(--border);background:#fff;color:var(--muted)}
+.tag.blue{color:var(--blue);border-color:var(--blue-border);background:var(--blue-soft)}
+.tag.amber{color:var(--amber-tx);background:var(--amber-bg);border-color:var(--amber-bd)}
+.tag.green{color:var(--green-tx);background:var(--green-bg);border-color:var(--green-bd)}
+.problem .actions{display:flex;gap:8px;margin-top:12px}
+.problem .fav{position:absolute;top:14px;right:14px;border:1px solid var(--border);background:#fff;width:36px;height:36px;border-radius:99px;display:grid;place-items:center;cursor:pointer;font-size:16px}
+.problem .fav.on{background:var(--red-soft);border-color:var(--red-bd);color:var(--red)}
+
+/* VIDEO */
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:860px){.video-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.video-grid{grid-template-columns:1fr}}
+.video-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.15s;text-decoration:none;color:inherit}
+.video-card:hover{box-shadow:var(--shadow2);transform:translateY(-1px)}
+.video-thumb{position:relative;background:linear-gradient(135deg,#0f172a,#334155);aspect-ratio:16/9;display:grid;place-items:center;color:#fff;overflow:hidden}
+.video-thumb .play{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.95);color:#e11d48;display:grid;place-items:center;font-size:20px;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+.video-thumb .dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.78);color:#fff;font-size:11px;font-weight:800;padding:3px 6px;border-radius:6px}
+.video-body{padding:13px}
+.video-body h4{margin:0 0 4px;font-size:14.5px;letter-spacing:-.2px;line-height:1.35}
+.video-body .chan{font-size:12px;color:var(--muted);font-weight:600}
+.yt-btn{display:inline-flex;align-items:center;gap:6px;background:#ff0000;color:#fff;border:0;border-radius:9px;padding:8px 12px;font-weight:800;font-size:13px;cursor:pointer;text-decoration:none}
+.yt-btn:hover{background:#cc0000}
+.yt-outline{border:1px solid var(--red-bd);background:var(--red-soft);color:var(--red);border-radius:9px;padding:8px 12px;font-weight:700;cursor:pointer;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.yt-outline:hover{background:#ffe4e6}
+
+/* DETAIL */
+.back{border:0;background:none;color:var(--blue);font-weight:800;cursor:pointer;padding:0;display:inline-flex;gap:6px;align-items:center}
+.detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:14px}
+@media(max-width:860px){.detail-grid{grid-template-columns:1fr}}
+.illustration{background:linear-gradient(180deg,#f8fafc,#eef2ff);border:1px solid var(--border);border-radius:16px;padding:16px;display:grid;place-items:center;min-height:180px;position:relative;overflow:hidden}
+.illustration .device{width:160px;height:100px;background:var(--navy);border-radius:12px;position:relative;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.illustration .device::after{content:"";position:absolute;inset:10px;background:linear-gradient(180deg,#e0e7ff,#c7d2fe);border-radius:8px;opacity:.95}
+.illustration .device::before{content:"";position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:70px;height:8px;background:#cbd5e1;border-radius:99px}
+.steps .step{display:flex;gap:12px;border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff;margin:8px 0;align-items:flex-start}
+.num{background:var(--blue);color:#fff;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:900;min-width:30px;font-size:13px}
+.check{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--border);display:grid;place-items:center;cursor:pointer;background:#fff;flex-shrink:0;margin-top:2px}
+.check.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.warn{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber-tx);padding:12px 14px;border-radius:12px;font-size:13.5px}
+.good{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green-tx);padding:12px 14px;border-radius:12px;font-size:13.5px}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:6px;font-size:13.5px;padding:6px 0;border-bottom:1px dashed var(--border2)}
+.kv:last-child{border:0}
+
+/* CHAT */
+.chat-wrap{display:grid;grid-template-columns:320px 1fr;gap:14px;height:62vh;min-height:460px}
+@media(max-width:760px){.chat-wrap{grid-template-columns:1fr;height:auto}}
+.chat-side{border:1px solid var(--border);border-radius:16px;background:#fff;padding:14px;overflow:auto}
+.suggestion{border:1px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;background:#fff;margin:6px 0;font-size:13.5px}
+.suggestion:hover{background:var(--blue-soft);border-color:var(--blue-border)}
+.chat-main{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:16px;background:#fff;overflow:hidden}
+.chat-log{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,#ffffff,#f8fafc)}
+.bubble{max-width:82%;padding:11px 13px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word}
+.bubble.bot{background:#fff;border:1px solid var(--border);border-top-left-radius:6px;align-self:flex-start;box-shadow:var(--shadow)}
+.bubble.me{background:var(--blue);color:#fff;border-top-right-radius:6px;align-self:flex-end}
+.bubble.typing{opacity:.7;font-style:italic}
+.chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:#fff}
+.chat-input input{flex:1;border:1px solid var(--border);border-radius:11px;padding:12px 14px;outline:none}
+.chat-input input:focus{border-color:var(--blue-border);box-shadow:0 0 0 4px var(--blue-soft)}
+.fab{position:fixed;right:18px;bottom:18px;z-index:30;width:56px;height:56px;border-radius:50%;border:0;background:var(--navy);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.2);font-size:22px}
+.mini-chat{position:fixed;right:18px;bottom:84px;width:360px;max-width:calc(100vw - 24px);height:430px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow2);display:none;flex-direction:column;overflow:hidden;z-index:30}
+.mini-chat.open{display:flex}
+.mini-head{background:var(--navy);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;font-weight:800}
+.mini-log{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:#f8fafc}
+
+/* FORMS */
+.field{margin:10px 0}
+.field label{font-weight:700;font-size:13px;display:block;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:11px;padding:11px 12px;font:inherit;outline:none;background:#fff}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue-border);box-shadow:0 0 0 4px var(--blue-soft)}
+
+/* FOOTER */
+footer{text-align:center;color:var(--muted);padding:28px 10px;font-size:12.5px;border-top:1px solid var(--border);background:#fff;margin-top:30px;border-radius:16px}
+@media print{
+  header,.fab,.mini-chat,.search,.chips,.toolbar,nav,.back,footer .no-print{display:none!important}
+  body{background:#fff}
+  main{padding:0}
+  .card{box-shadow:none}
+}
+
+/* ACCESSIBILITY */
+.skip-link{position:absolute;left:8px;top:-56px;z-index:100;background:var(--navy);color:#fff;padding:10px 14px;border-radius:10px;font-weight:700;transition:top .15s}
+.skip-link:focus{top:8px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+[role="button"]{cursor:pointer}
+
+/* RECENTLY VIEWED */
+.recent{margin:2px 0 14px}
+.recent .recent-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.rchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;border-radius:99px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--navy)}
+.rchip:hover{border-color:var(--blue-border);background:var(--blue-soft);color:var(--blue)}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<header>
+  <div class="logo"><i>TF</i> Tech<span>Fix</span></div>
+  <button class="hamburger" onclick="toggleNav(this)" aria-label="Menu" aria-expanded="false" aria-controls="nav">☰</button>
+  <nav id="nav">
+    <button class="active" onclick="view('home',this)">Home</button>
+    <button onclick="view('problems',this)">Troubleshoot</button>
+    <button onclick="view('chat',this)">Chat Assistant</button>
+    <button onclick="view('favorites',this)">Favorites <span id="favCount" style="background:var(--blue-soft);color:var(--blue);padding:2px 7px;border-radius:99px;font-size:11px;margin-left:4px">0</span></button>
+    <button onclick="view('about',this)">About</button>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+  <!-- HOME -->
+  <section id="home" class="view active">
+    <div class="hero">
+      <div>
+        <span class="badge">🎓 Grade 11–12 CSS • S.Y. 2026–2027 • Paliparan 3 SHS</span>
+        <h1>Fix it.<br>Understand it.</h1>
+        <p>TechFix is a web-based troubleshooting assistant for common <b style="color:#fff">hardware, software, networking, and peripheral</b> problems — built for Computer Systems Servicing students, teachers, and beginners.</p>
+        <div class="hero-actions">
+          <button class="btn light" onclick="view('problems',navBtn(1))">Start Troubleshooting →</button>
+          <button class="btn" style="background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.2)" onclick="view('chat',navBtn(2))">💬 Ask Assistant</button>
+        </div>
+        <div class="small" style="color:#dbeafe;margin-top:10px">No install • Installable • Works offline after first visit • Free for school use</div>
+      </div>
+      <div class="hero-card">
+        <div style="font-weight:800;opacity:.9">Coverage</div>
+        <div class="kpi"><b id="kpiTotal">22</b> <span>troubleshooting guides</span></div>
+        <div class="small" style="color:#e0e7ff">Step-by-step • Causes • Safety reminders • Printable</div>
+        <hr>
+        <div class="hero-mini">
+          <div><strong>4</strong><span class="small" style="color:#e0e7ff">Categories</span></div>
+          <div><strong>✓</strong><span class="small" style="color:#e0e7ff">Beginner-friendly</span></div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="btn small" style="flex:1;background:var(--navy);color:#fff" onclick="view('problems',navBtn(1));setTimeout(()=>document.getElementById('q').focus(),100)">🔎 Search guides</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head"><h2>How it works</h2><p>Identify → check causes → follow steps → verify. Ask a technician for anything advanced.</p></div>
+    <div class="grid">
+      <div class="card"><div class="icon">🔎</div><h3>Identify</h3><p class="muted">Search or browse the problem that matches what you see — no display, black screen, slow PC, Wi-Fi, printer, etc.</p></div>
+      <div class="card"><div class="icon">🧩</div><h3>Check causes</h3><p class="muted">Review the most common possible causes before changing anything. Avoid unnecessary fixes.</p></div>
+      <div class="card"><div class="icon">🛠️</div><h3>Follow steps</h3><p class="muted">Do the basic steps in order, tick them off, and check if the issue is resolved after each step.</p></div>
+    </div>
+
+    <div class="section-head"><h2>Browse by category</h2><p>Explore common computer problems grouped by type.</p></div>
+    <div class="grid" id="catCards"></div>
+
+    <div class="section-head"><h2>Suggested guides</h2><p>Quick access to common troubleshooting topics.</p></div>
+    <div class="grid" id="popular"></div>
+
+    <div class="card" style="margin-top:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between">
+      <div><b>Can't find your problem?</b><div class="small">Describe the issue to the TechFix Assistant for a suggested guide or try a related tutorial.</div></div>
+      <button class="btn primary" onclick="view('chat',navBtn(2))">Ask Assistant →</button>
+    </div>
+  </section>
+
+  <!-- PROBLEMS -->
+  <section id="problems" class="view">
+    <div class="section-head"><h2>Computer Troubleshooting</h2><p>Choose a category, search, or ask the assistant. Try "black screen" — it also finds "No Display".</p></div>
+    <div class="search"><input id="q" aria-label="Search troubleshooting guides" placeholder="Search: no display, black screen, blue screen, Wi-Fi, slow, printer..." oninput="render()"><button class="btn primary" onclick="document.getElementById('q').focus()">Search</button><button class="btn ghost" onclick="document.getElementById('q').value='';cat='All';render()">Clear</button></div>
+    <div class="chips" id="chips"></div>
+    <div class="toolbar">
+      <div class="small"><span id="resultCount">0</span> guides • <span id="historyCount">0</span> recently viewed</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="sort" onchange="render()" style="border:1px solid var(--border);border-radius:9px;padding:8px 10px;background:#fff;font-weight:600;font-size:13px"><option value="default">Sort: Default</option><option value="az">A → Z</option><option value="cat">By category</option></select>
+        <button class="btn small ghost" onclick="view('favorites',navBtn(3))">♥ Favorites</button>
+        <button class="btn small ghost" onclick="view('chat',navBtn(2))">💬 Ask Assistant</button>
+      </div>
+    </div>
+    <div id="recentRow"></div>
+    <div class="grid" id="list"></div>
+  </section>
+
+  <!-- DETAIL -->
+  <section id="detail" class="view">
+    <button class="back" onclick="goBack()">← Back to list</button>
+    <div class="detail-grid">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px"><div class="icon" id="ico"></div><span id="cat2" style="color:var(--blue);font-weight:800;font-size:12px;letter-spacing:.4px;text-transform:uppercase"></span><span id="diffBadge" class="tag"></span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn small ghost" id="favBtn" onclick="toggleFav(currentId)">♡ Favorite</button>
+            <button class="btn small ghost" onclick="window.print()">🖨️ Print</button>
+            <button class="btn small ghost" onclick="shareDetail()">↗ Share</button>
+          </div>
+        </div>
+        <h2 id="title" style="margin:12px 0 6px;letter-spacing:-.5px"></h2>
+        <p id="desc" class="muted" style="margin:0"></p>
+        <div class="illustration" style="margin-top:14px">
+          <div style="text-align:center">
+            <div class="device" style="margin:0 auto"></div>
+            <div class="small" style="margin-top:10px">Illustrative — refer to your actual device for ports and indicators</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+          <div class="card" style="padding:12px"><div class="small">⏱ Time</div><b id="timeMeta"></b></div>
+          <div class="card" style="padding:12px"><div class="small">🧰 You may need</div><b id="toolsMeta" style="font-size:13px"></b></div>
+        </div>
+        <h3 style="margin:18px 0 8px">Possible causes</h3>
+        <ul id="causes" style="margin:0;padding-left:18px"></ul>
+        <h3 style="margin:18px 0 8px">Step-by-step troubleshooting <span class="small" style="font-weight:600">— tick as you go</span></h3>
+        <div id="steps" class="steps"></div>
+        <div id="progressBox" class="good" style="display:none"></div>
+        <div id="videoForGuide" style="margin-top:14px"></div>
+        <div class="warn" style="margin-top:14px">⚠️ Safety: Unplug or ask your teacher before opening any computer case. Stop and ask a qualified technician for board-level, power supply, or advanced networking repair. This guide covers <b>basic</b> procedures only.</div>
+        <div class="good" style="margin-top:10px">✅ If the problem is fixed, you can stop. If not, try the next step or ask for help. Use “Did this guide help?” to record feedback on this device.</div>
+        <div class="card" style="margin-top:12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+          <div><b>Did this guide help?</b><div class="small">Your response is saved on this device only.</div></div>
+          <div style="display:flex;gap:8px"><button class="btn small ghost" onclick="feedback(true)">👍 Yes</button><button class="btn small ghost" onclick="feedback(false)">👎 Not yet</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3 style="margin:0 0 8px">Quick info</h3>
+          <div id="quickInfo"></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3 style="margin:0 0 8px">Related guides</h3>
+          <div id="related"></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3 style="margin:0 0 8px">Glossary</h3>
+          <div class="small" style="line-height:1.6">
+            <b>POST</b> — Power-On Self Test.<br>
+            <b>BSOD</b> — Blue Screen of Death (Windows stop error).<br>
+            <b>DHCP</b> — Auto-assigns IP addresses.<br>
+            <b>Driver</b> — Software that lets hardware talk to the OS.<br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAT -->
+  <section id="chat" class="view">
+    <div class="section-head"><h2>TechFix Assistant</h2><p>Describe your problem in plain language. TechFix suggests a matching guide and basic next steps. If the built-in assistant service is unavailable, it uses the local guide matcher.</p></div>
+
+    <div class="card" style="margin-bottom:14px;background:var(--blue-soft);border-color:var(--blue-border)">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <b>How the assistant works</b>
+        <span id="aiStatus" class="tag" style="background:var(--bg)">Checking assistant…</span>
+      </div>
+      <p class="small" style="margin:8px 0 0">The assistant can suggest a matching TechFix guide and basic troubleshooting steps. It is not a professional diagnosis. Never enter passwords, personal information, or API keys. For advanced or risky repairs, ask your CSS teacher or a qualified technician.</p>
+    </div>
+
+    <div class="chat-wrap">
+      <div class="chat-side">
+        <b>Try asking:</b>
+        <div class="suggestion" role="button" tabindex="0" onclick="askChat('black screen, no display')">⬛ “black screen, no display”</div>
+        <div class="suggestion" role="button" tabindex="0" onclick="askChat('My computer has no display')">🖥️ “My computer has no display”</div>
+        <div class="suggestion" role="button" tabindex="0" onclick="askChat('WiFi not connecting')">📶 “WiFi not connecting”</div>
+        <div class="suggestion" role="button" tabindex="0" onclick="askChat('Computer is very slow')">🐢 “Computer is very slow”</div>
+        <div class="suggestion" role="button" tabindex="0" onclick="askChat('Printer not printing')">🖨️ “Printer not printing”</div>
+        <div class="suggestion" role="button" tabindex="0" onclick="askChat('Blue screen error')">💙 “Blue screen error”</div>
+        <div class="suggestion" role="button" tabindex="0" onclick="askChat('Keyboard not working')">⌨️ “Keyboard not working”</div>
+        <div class="card" style="margin-top:12px;background:var(--blue-soft);border-color:var(--blue-border)"><b style="color:var(--blue)">How it works</b><div class="small">The assistant tries the built-in service when available and falls back to matching your message against TechFix guides. If it finds a close match, it suggests the guide and quick steps. Black screen / blank screen maps to “No Display”. It may not understand every description.</div></div>
+      </div>
+      <div class="chat-main">
+        <div id="chatLog" class="chat-log">
+          <div class="bubble bot">Hi! I'm your TechFix Assistant. 👋<br>Tell me what's happening — e.g., <b>black screen</b>, <b>no display</b>, or <b>Wi-Fi not connecting</b>. I'll break down what's likely wrong, walk you through the fix step by step, and suggest YouTube lessons so you learn how it works.</div>
+        </div>
+        <div class="chat-input"><input id="chatInput" aria-label="Describe your computer problem" placeholder="Type your problem... (e.g., black screen, slow PC)" onkeydown="if(event.key==='Enter')sendChat()"><button class="btn primary" onclick="sendChat()">Send</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAVORITES -->
+  <section id="favorites" class="view">
+    <div class="section-head"><h2>Favorites</h2><p>Guides you saved for quick access. Stored on this device only.</p></div>
+    <div class="grid" id="favList"></div>
+    <div id="favEmpty" class="card" style="text-align:center;padding:28px;display:none"><div style="font-size:32px">♡</div><h3>No favorites yet</h3><p class="muted">Tap ♥ on any guide to save it here.</p><button class="btn primary" onclick="view('problems',navBtn(1))">Browse guides</button></div>
+  </section>
+
+  <!-- ABOUT -->
+
+  <section id="about" class="view">
+    <div class="section-head"><h2>About TechFix</h2><p>Research prototype — Grade 12 Computer Systems Servicing, Paliparan 3 Senior High School.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>What is TechFix?</h3>
+        <p class="muted">TechFix is a web-based troubleshooting assistant that guides users through <b>common and basic</b> computer problems in hardware, software, networking, and peripherals. It provides possible causes, step-by-step procedures, safety reminders, and printable guides. It is designed to support CSS students during hands-on activities and basic servicing.</p>
+        <h3>Scope & Limitations</h3>
+        <p class="muted" style="font-size:13.5px">TechFix covers basic troubleshooting only. Board-level repair, power-supply repair, advanced networking (enterprise), and complex OS re-engineering are <b>outside the scope</b>. Users are advised to seek a qualified technician or teacher for advanced cases — a reminder appears on every guide.</p>
+        <div class="warn">TechFix is an assistant, not a replacement for a qualified technician.</div>
+      </div>
+      <div class="card">
+        <h3>Using TechFix</h3>
+        <p class="muted" style="font-size:13.5px">Search for a problem, open the matching guide, review possible causes, and follow the basic steps one at a time. If a guide does not match your issue, try another keyword or use the Chat Assistant.</p>
+        <h3>Researchers</h3>
+        <p class="muted">Grade 12 CSS Researchers • S.Y. 2026–2027<br>Paliparan 3 Senior High School<br>City of Dasmariñas, Cavite</p>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn small ghost" onclick="view('problems',navBtn(1))">Browse guides →</button>
+          <button class="btn small ghost" onclick="window.print()">🖨️ Print this page</button>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin:0 0 6px">How to cite / acknowledge</h3>
+      <p class="muted" style="font-size:13.5px;margin:0">TechFix is a research prototype for classroom use. Check important troubleshooting steps with your CSS teacher, and do not attempt repairs outside your training.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <b>TechFix Prototype</b> • Paliparan 3 Senior High School • CSS 12-2 • S.Y. 2026–2027<br>
+  <span class="small">For basic troubleshooting only — seek a qualified technician for advanced repair. Built for research and classroom use.</span>
+  <div class="small no-print" style="margin-top:8px"><a href="#" onclick="view('about',navBtn(4));return false">About</a> • <a href="#" onclick="view('problems',navBtn(1));return false">Troubleshoot</a> • <a href="#" onclick="view('chat',navBtn(2));return false">Chat Assistant</a></div>
+</footer>
+
+<!-- Floating Assistant -->
+<button class="fab" onclick="toggleMini()" aria-label="Chat"><span style="font-size:20px">💬</span></button>
+<div class="mini-chat" id="miniChat">
+  <div class="mini-head"><span>TechFix Assistant</span><button onclick="toggleMini()" style="background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:8px;padding:4px 8px;cursor:pointer">✕</button></div>
+  <div id="miniLog" class="mini-log"><div class="bubble bot">Hi! Try “black screen” or “no display” — I’ll find the guide. I can suggest a matching guide and basic steps.</div></div>
+  <div class="chat-input"><input id="miniInput" aria-label="Describe your computer problem" placeholder="Type here... (e.g., black screen)" onkeydown="if(event.key==='Enter')sendMini()"><button class="btn primary small" onclick="sendMini()">Send</button></div>
+</div>
+
+<script>
+// ===================================================================
+// DATA — canonical shape: [0 cat,1 icon,2 title,3 desc,4 causes[],5 steps[],6 diff,7 time,8 tools]
+// ===================================================================
+const DEFAULT_P = [
+ ['Hardware','🖥️','No Display','The computer turns on but nothing appears on the monitor. Also called black screen / blank screen.',['Loose display cable','Wrong monitor input/source','Monitor power problem','RAM or internal connection issue'],['Check monitor and system power LEDs.','Check both ends of the display cable (VGA/HDMI/DP).','Select the correct monitor input/source.','Test the monitor/cable with another known-working device if available.','If internal inspection is needed, ask your teacher or a qualified technician.'],'Beginner','5–10 mins','None (or spare cable for testing)'],
+ ['Software','🐢','Computer Is Slow','Programs take a long time to open or the system feels sluggish.',['Too many programs running','Low available storage','Many startup applications','Background processes / updates'],['Close unused programs and browser tabs.','Open Task Manager (Ctrl+Shift+Esc) and check high CPU/Memory/Disk usage.','Remove temporary files and check free storage.','Disable unnecessary startup apps (Task Manager → Startup).','Restart and test again.'],'Beginner','10–15 mins','None'],
+ ['Networking','📶','Wi-Fi Not Connecting','The computer cannot connect to a wireless network.',['Wi-Fi turned off / Airplane mode','Incorrect password','Router / access point issue','Network adapter disabled or driver issue'],['Make sure Wi-Fi is on and Airplane mode is off.','Select the correct network and re-enter the password carefully.','Restart the computer and, if allowed, the router.','Check if another device can connect to the same Wi-Fi.','If only this PC fails, check adapter settings or ask your teacher.'],'Beginner','5–10 mins','None'],
+ ['Peripherals','🖨️','Printer Not Printing','A printer is connected but documents do not print.',['Printer offline or showing error','Paper or ink/toner issue','Wrong printer selected','Stuck print queue','Loose / wrong connection (USB/Wi-Fi)'],['Make sure the printer is on and error-free.','Check paper, ink/toner, and cable/Wi-Fi connection.','Confirm the correct printer is selected in the app.','Cancel stuck jobs in the print queue if needed.','Print a test page; ask for help if it still fails.'],'Beginner','5–10 mins','Paper, ink/toner'],
+ ['Peripherals','🔊','No Sound','The computer is running but there is no audio.',['Volume muted or too low','Wrong output device selected','Loose headset/speaker connection','Audio driver or app setting'],['Check volume and mute (system + app).','Select the correct output device (Settings → Sound).','Reconnect headset/speaker and test another port.','Test another app or audio file.','If it remains, check Device Manager or ask for assistance.'],'Beginner','5 mins','Headset/speaker for testing'],
+ ['Software','💻','Application Not Opening','A program does not launch or closes immediately.',['Frozen program','Missing or damaged files','Low system resources','Compatibility or update issue'],['Close the app fully (Task Manager if needed) and try again.','Restart the computer.','Check for an application update.','Check requirements and free storage.','Use approved repair/reinstall or ask your teacher.'],'Beginner','5–10 mins','None'],
+ ['Peripherals','⌨️','Keyboard Not Working','Some or all keyboard keys do not respond.',['Loose or unplugged connection','Wireless battery / receiver issue','Wrong USB port','Driver or system issue'],['Reconnect the keyboard firmly.','For wireless: check battery and USB receiver.','Try another USB port.','Test typing in another app.','Restart; test another known-working keyboard if available.'],'Beginner','5 mins','Spare keyboard for testing'],
+ ['Networking','🌐','Internet Is Slow','The connection works but pages and downloads are very slow.',['Weak Wi-Fi signal','Network congestion / many users','Background downloads or updates','Router or ISP issue'],['Move closer to the access point.','Close heavy downloads/streams on this and nearby devices.','Test another website/service.','Check if other devices are also slow.','If the whole network is slow, report to the teacher/admin.'],'Beginner','5–10 mins','None'],
+ ['Hardware','🌡️','Computer Overheating','The computer becomes unusually hot or the fan runs loudly.',['Blocked ventilation','Dust buildup','Heavy workload (games, rendering)','Cooling system issue'],['Save work and close unnecessary programs.','Place the device on a hard, flat surface.','Ensure vents are not blocked (avoid beds/sofas).','Let it cool before heavy tasks.','If overheating continues, ask a qualified technician.'],'Beginner','5 mins','None'],
+ ['Hardware','💾','Storage Almost Full','The drive has very little free space left.',['Large files and videos','Temporary and cache files','Unused applications','Large downloads folder'],['Check storage usage (Settings → Storage).','Remove temporary files using system tools (Disk Cleanup/Storage Sense).','Move or delete files only after confirming they are not needed.','Uninstall unused apps if permitted.','Empty Recycle Bin after confirming.'],'Beginner','10 mins','None'],
+ ['Hardware','🔌','Computer Won\'t Turn On','Pressing the power button does nothing — no lights, no fan.',['Loose power cable or outlet issue','Power strip/UPS turned off','Faulty power cable','Internal power issue'],['Check the power cable at both ends (wall and PC).','Ensure the power strip/UPS and wall switch are on.','Try another outlet you know works.','Look for any power LED or fan spin; note what you see.','If still dead, do not open the PSU — ask a technician.'],'Beginner','5–10 mins','None'],
+ ['Software','💙','Blue Screen Error (BSOD)','Windows shows a blue screen with an error code and restarts.',['Recent driver or update','New hardware','Corrupted system files','Overheating or RAM issue'],['Note the stop code (e.g., 0x...). Take a clear photo.','Restart and see if it happens again.','Undo the last change (new driver/hardware) if possible.','Run Windows Update.','If it repeats, report the code to your teacher/technician.'],'Intermediate','10–15 mins','Phone for photo'],
+ ['Hardware','🖱️','Mouse Not Working','The cursor does not move or clicks don\'t register.',['Loose USB / receiver','Low battery (wireless)','Dirty sensor','Driver issue'],['Reconnect the mouse / re-seat the receiver.','Replace or charge the battery.','Clean the sensor and try a mousepad.','Try another USB port.','Test another mouse to isolate the fault.'],'Beginner','5 mins','Spare mouse'],
+ ['Software','🦠','Pop-ups / Possible Malware','Many pop-ups, redirects, or unknown programs appear.',['Adware / browser extension','Downloaded unknown file','Phishing site'],['Do not click pop-ups; close the browser.','Run a scan with Windows Security (or approved antivirus).','Remove suspicious browser extensions.','Clear browser cache and history.','Ask your teacher before installing any cleaner tool.'],'Beginner','10–15 mins','None'],
+ ['Peripherals','🔌','USB Device Not Recognized','“USB device not recognized” appears when plugging something in.',['Loose connection','Faulty USB port or cable','Driver issue','Device needs more power'],['Unplug and replug firmly; try another port.','Try the device on another computer.','Try another cable/device to isolate.','In Device Manager, scan for hardware changes.','If it still fails, the device may be faulty.'],'Beginner','5–10 mins','Another USB port/cable'],
+ ['Networking','🚫','No Internet (Connected, No Browsing)','Wi-Fi shows connected but no website loads.',['Wrong DNS / IP settings','Router needs restart','Browser issue','IP conflict'],['Try another website and another browser.','Restart the PC; if allowed, restart the router.','Run Windows Network Troubleshooter (Settings → Network).','Try “Forget” and reconnect to Wi-Fi.','If all devices are affected, report to admin.'],'Beginner','5–10 mins','None'],
+ ['Software','⏱️','Slow Startup','The computer takes a very long time to reach the desktop.',['Many startup programs','Low storage','Many background services','Old HDD vs SSD'],['Check Startup apps (Task Manager → Startup) and disable unneeded ones.','Check free storage.','Restart (not shutdown) and time it.','Keep Windows updated.','Ask your teacher about storage upgrade options.'],'Beginner','10 mins','None'],
+ ['Hardware','⚡','Display Flickering','The screen flickers or shows random lines.',['Loose display cable','Wrong refresh rate','Display driver issue','Failing monitor'],['Turn off the monitor and PC before reseating the display cable.','Set the recommended resolution and refresh rate in Display Settings.','If the issue began after a driver update, ask your teacher before updating or rolling back the display driver.','Test with another known-working monitor or cable if available.','If flickering continues, stop and ask a qualified technician.'],'Intermediate','10 mins','Spare cable/monitor'],
+ ['Peripherals','🎧','Headset / Microphone Not Working','Others cannot hear you or you cannot hear them.',['Wrong input/output selected','Muted mic or low volume','Loose jack/USB','App permission denied'],['Check Sound settings — correct input/output.','Unmute and raise mic volume; test in Sound → Input.','Reconnect the headset; try another port.','Check app permissions (Settings → Privacy → Microphone).','Test the headset on another device.'],'Beginner','5 mins','Headset for testing'],
+ ['Software','🔄','Windows Update Stuck','Updates download or install for a very long time or fail.',['Slow or unstable internet','Low storage','Corrupted update cache'],['Ensure stable internet and enough storage.','Restart only if Windows is not actively installing an update.','Run the Windows Update troubleshooter if it is available.','If a download is stuck, pause and resume it; if installation is stuck, allow more time.','Do not force shutdown during “Do not turn off” — wait or ask for help.'],'Beginner','10–15 mins','Stable internet'],
+ ['Hardware','🔋','Laptop Battery Drains Fast','The battery percentage drops quickly even with light use.',['High brightness / performance mode','Many background apps','Battery health has declined with age or wear'],['Lower brightness; set Power mode to Balanced/Battery Saver.','Close unused apps and browser tabs.','Check Battery usage (Settings → Battery).','Avoid covering vents.','If health is very low, ask a technician about replacement.'],'Beginner','5 mins','None'],
+ ['Networking','🔒','Wi-Fi Asks for Password Repeatedly','The system keeps asking for the Wi-Fi password even when correct.',['Caps Lock / typo','Saved network corrupted','Router MAC filter or limit','Wrong security type'],['Re-type carefully; check Caps Lock.','Forget the network and reconnect.','Restart the PC and router if allowed.','Check if other devices connect with the same password.','Ask admin if MAC filtering is enabled.'],'Beginner','5 mins','Wi-Fi password'],
+];
+
+// Helpers that must exist before loadGuides
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+const STOP_WORDS=new Set(['the','a','an','is','are','my','has','have','not','no','very','does','doesn','and','or','to','of','it','in','on','with','for','this','that','are','was','were','been']);
+function normalizeQuery(q){
+  let s=q.toLowerCase();
+  // Black screen / blank screen / no signal -> No Display
+  if(s.includes('black screen')||s.includes('blank screen')||s.includes('blackscreen')||s.includes('blankscreen')||s.includes('no signal')||s.includes('black display')||s.includes('screen is black')||s.includes('screen black')||s.includes('walang display')||s.includes('itim na screen')){
+    s+=' no display monitor';
+  }
+  if(s.includes('bsod')||s.includes('blue screen')) s+=' blue screen error';
+  if(s.includes('mabagal')||(/\blag\b/.test(s))) s+=' slow';
+  if(s.includes('ayaw gumana')||s.includes('hindi gumagana')) s+=' not working';
+  return s;
+}
+function ytTokens(s){return normalizeQuery(s).toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2 && !STOP_WORDS.has(w));}
+function tokens(s){return normalizeQuery(s).toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2 && !STOP_WORDS.has(w));}
+
+// ---------- YOUTUBE FALLBACK ----------
+// ---------- YOUTUBE FALLBACK — CAREFULLY MAPPED TO EACH GUIDE ----------
+// Each entry is a YouTube SEARCH (never 404). Click goes to relevant results for that problem.
+// No creator names — just title + YouTube search, so nothing is misleading.
+const YT_VIDEOS=[
+  {title:'How to Fix Computer No Display / Black Screen — Step by Step',dur:'10:24',query:'how to fix computer no display black screen',tags:['display','no display','black screen','blank screen','monitor','no signal','hardware']},
+  {title:'Why Is My PC So Slow? How to Speed Up Windows',dur:'8:47',query:'why is my pc so slow how to speed up windows',tags:['slow','lag','slow pc','performance','speed up','software']},
+  {title:'Slow Startup Fix — Speed Up Boot Time',dur:'6:20',query:'windows slow startup fix speed up boot',tags:['slow startup','startup slow','boot slow','slow boot']},
+  {title:'Storage Almost Full — How to Free Up Space',dur:'7:15',query:'how to free up disk space windows storage full',tags:['storage','disk','full','space','cleanup','almost full','storage full']},
+  {title:'Wi-Fi Not Connecting Fix — Windows',dur:'6:12',query:'wifi not connecting windows fix',tags:['wifi','wi-fi','wireless','not connecting','network','internet']},
+  {title:'No Internet But Wi-Fi Connected — Fix It',dur:'5:20',query:'wifi connected but no internet fix windows',tags:['no internet','connected','no browsing','dns','connected no internet','no internet']},
+  {title:'Internet Is Slow — How to Fix Slow Browsing',dur:'5:10',query:'internet slow fix wifi speed up browsing',tags:['internet slow','slow internet','slow browsing','network slow','internet is slow']},
+  {title:'Wi-Fi Keeps Asking for Password — Fix',dur:'4:55',query:'wifi keeps asking for password fix windows',tags:['wifi password','asks for password','password repeatedly','authentication','keeps asking']},
+  {title:'How to Fix Blue Screen (BSOD) on Windows',dur:'12:10',query:'how to fix blue screen bsod windows',tags:['blue screen','bsod','stop code','crash','blue screen error']},
+  {title:'Windows Update Stuck — How to Fix',dur:'6:40',query:'windows update stuck fix',tags:['update','stuck','install','windows update','update stuck']},
+  {title:'Application Not Opening — Fix',dur:'5:15',query:'application not opening fix windows program wont open',tags:['application','app','not opening','wont open','program','application not opening']},
+  {title:'Pop-ups & Possible Malware — How to Remove',dur:'7:00',query:'how to remove pop ups malware windows',tags:['pop-ups','pop ups','malware','virus','adware','pop-up']},
+  {title:'Computer Won\'t Turn On — Power Fix',dur:'6:30',query:'computer wont turn on fix power no lights',tags:['wont turn on','power','no power','not turning on','wont boot','wont turn on']},
+  {title:'Laptop Battery Drains Fast — Fix',dur:'6:00',query:'laptop battery drains fast fix',tags:['battery','drains','battery drain','fast drain','laptop battery','battery drains']},
+  {title:'Computer Overheating Fix — Clean & Cool',dur:'7:05',query:'laptop overheating how to clean and cool fix',tags:['overheating','hot','fan','temperature','thermal','overheat','overheating']},
+  {title:'Display Flickering Fix — Windows',dur:'5:45',query:'display flickering fix windows screen flicker',tags:['flickering','flicker','lines','screen flicker','flickering display','display flickering']},
+  {title:'How to Fix Keyboard Not Working — USB & Wireless',dur:'5:18',query:'keyboard not working fix windows usb wireless',tags:['keyboard','keys','typing','keyboard not working','not working']},
+  {title:'How to Fix Mouse Not Working — USB & Wireless',dur:'4:42',query:'mouse not working fix windows usb wireless cursor',tags:['mouse','cursor','click','mouse not working','not working']},
+  {title:'USB Device Not Recognized — Easy Fix',dur:'4:50',query:'usb device not recognized fix windows',tags:['usb','not recognized','device','port','usb not recognized','usb device']},
+  {title:'Printer Not Printing — Quick Fix',dur:'5:33',query:'printer not printing troubleshooting windows fix',tags:['printer','printing','offline','queue','not printing','printer not printing']},
+  {title:'No Sound Fix — Windows Audio Troubleshooting',dur:'6:05',query:'no sound fix windows audio no audio',tags:['sound','audio','speaker','volume','no sound','muted','no audio']},
+  {title:'Headset & Microphone Not Working — Fix',dur:'5:50',query:'headset microphone not working windows fix',tags:['headset','microphone','mic','headset','microphone not working','not working']},
+];
+function ytUrl(v){ return `https://www.youtube.com/results?search_query=${encodeURIComponent(v.query)}`; }
+// General search for any query (scores against title+tags+query)
+function youtubeForQuery(q){
+  const t=ytTokens(q);
+  if(!t.length) return YT_VIDEOS.slice(0,3);
+  const scored=YT_VIDEOS.map(v=>{
+    let sc=0;
+    const hay=(v.title+' '+v.tags.join(' ')+' '+v.query).toLowerCase();
+    for(const w of t) if(hay.includes(w)) sc+=1.5;
+    // exact tag phrase bonus
+    for(const tag of v.tags) if(t.join(' ').includes(tag) || tag.split(' ').every(p=>t.includes(p))) sc+=0.5;
+    return {v,sc};
+  }).sort((a,b)=>b.sc-a.sc);
+  const top=scored.filter(x=>x.sc>=1.5).slice(0,3).map(x=>x.v);
+  return top.length ? top : scored.slice(0,3).map(x=>x.v);
+}
+// STRICT matcher for guide detail pages — only returns truly relevant videos
+function videosForGuide(guideTitle){
+  const t=ytTokens(guideTitle);
+  const scored=YT_VIDEOS.map(v=>{
+    let sc=0;
+    const hay=(v.title+' '+v.tags.join(' ')).toLowerCase();
+    const qLower=guideTitle.toLowerCase();
+    for(const w of t) if(hay.includes(w)) sc+=1.5;
+    // strong bonus if guide title words appear in video tags
+    for(const tag of v.tags){
+      if(qLower.includes(tag) && tag.length>3) sc+=2;
+    }
+    // title word overlap
+    const titleWords=qLower.split(/\W+/).filter(w=>w.length>3);
+    for(const w of titleWords) if(v.tags.some(tag=>tag.includes(w))) sc+=0.8;
+    return {v,sc};
+  }).sort((a,b)=>b.sc-a.sc);
+  const top=scored.filter(x=>x.sc>=2.5).slice(0,2).map(x=>x.v);
+  return top;
+}
+
+let P = JSON.parse(JSON.stringify(DEFAULT_P));
+let cat='All';
+let currentId=null;
+let lastList='problems';
+let completedSteps=new Set();
+
+// Normalize old shapes (6/7 fields) -> 9 fields
+(function normalize(){
+  for(let i=0;i<P.length;i++){
+    const x=P[i];
+    if(!Array.isArray(x)) continue;
+    if(x.length===6) P[i]=[x[0],x[1],x[2],x[3],x[4],x[5],'Beginner','5–10 mins','None'];
+    else if(x.length===7) P[i]=[x[0],x[1],x[2],x[3],x[4],x[5],x[6]||'Beginner','5–10 mins','None'];
+    else if(x.length===8) P[i]=[x[0],x[1],x[2],x[3],x[4],x[5],x[6]||'Beginner',x[7]||'5–10 mins','None'];
+  }
+  // fix No Display desc to include black screen keyword if older data
+  const nd=P.find(g=>g[2]==='No Display');
+  if(nd && !String(nd[3]).toLowerCase().includes('black screen')) nd[3]='The computer turns on but nothing appears on the monitor. Also called black screen / blank screen.';
+})();
+
+function navBtn(i){ return document.querySelectorAll('nav button')[i]; }
+function view(id,btn){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el) el.classList.add('active');
+  if(btn){ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); }
+  document.querySelector('nav').classList.remove('open');
+  { const hb=document.querySelector('.hamburger'); if(hb) hb.setAttribute('aria-expanded','false'); }
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='favorites') renderFavs();
+  if(id==='problems') render();
+  if(id==='home') renderHomeExtras();
+}
+function goBack(){ view(lastList, document.querySelectorAll('nav button')[ lastList==='favorites'?3 : 1]); }
+
+// ---------- HOME ----------
+function renderHomeExtras(){
+  const cats=[...new Set(P.map(x=>x[0]))];
+  document.getElementById('catCards').innerHTML=cats.map(c=>{
+    const n=P.filter(x=>x[0]===c).length;
+    const icons={Hardware:'🖥️',Software:'💻',Networking:'📶',Peripherals:'🖨️'};
+    return `<div class="card hover" style="cursor:pointer" role="button" tabindex="0" onclick="cat='${c}';view('problems',navBtn(1));render()"><div class="icon">${icons[c]||'📦'}</div><h3 style="margin:10px 0 4px">${c}</h3><p class="muted" style="margin:0">${n} guides</p><div class="small" style="margin-top:8px;color:var(--blue);font-weight:700">Browse →</div></div>`;
+  }).join('');
+  const pop=[0,2,1,3,11,12].filter(i=>P[i]).slice(0,6);
+  document.getElementById('popular').innerHTML=pop.map(i=>{
+    const x=P[i]; return `<div class="card hover problem" style="cursor:pointer" role="button" tabindex="0" onclick="openP(${i})"><div class="icon">${escHtml(x[1])}</div><small style="color:var(--blue);font-weight:800">${escHtml(x[0])}</small><h3>${escHtml(x[2])}</h3><p>${escHtml(x[3])}</p><span class="small" style="color:var(--blue);font-weight:700">View guide →</span></div>`;
+  }).join('');
+  document.getElementById('kpiTotal').textContent=P.length;
+}
+
+// ---------- RENDER LIST (with No-Results + Tutorials embedded) ----------
+function render(){
+  const q=(document.getElementById('q')?.value||'').toLowerCase().trim();
+  const sort=document.getElementById('sort')?.value||'default';
+  const cats=['All',...new Set(P.map(x=>x[0]))];
+  document.getElementById('chips').innerHTML=cats.map(x=>`<button class="chip ${x===cat?'active':''}" onclick="cat='${x}';render()">${x}</button>`).join('');
+  // use normalize for matching too
+  const qNorm = normalizeQuery(q);
+  let a=P.map((x,i)=>({x,i})).filter(o=> (cat==='All'||o.x[0]===cat) && (!q || normalizeQuery(o.x.join(' ')).toLowerCase().includes(qNorm) || o.x.join(' ').toLowerCase().includes(q)) );
+  if(sort==='az') a.sort((A,B)=>A.x[2].localeCompare(B.x[2]));
+  if(sort==='cat') a.sort((A,B)=>A.x[0].localeCompare(B.x[0])||A.x[2].localeCompare(B.x[2]));
+  document.getElementById('resultCount').textContent=a.length;
+  document.getElementById('historyCount').textContent=getHistory().length;
+  renderRecent();
+  const favs=getFavs();
+  if(!a.length){
+    const qRaw = (document.getElementById('q')?.value||'').trim();
+    const ytQ = qRaw ? encodeURIComponent(qRaw + ' computer troubleshooting') : 'computer%20troubleshooting%20for%20beginners';
+    const searchUrl = `https://www.youtube.com/results?search_query=${ytQ}`;
+    const vids = qRaw ? youtubeForQuery(qRaw) : YT_VIDEOS.slice(0,3);
+    const cards = vids.map(v=>`
+      <a href="${ytUrl(v)}" target="_blank" rel="noopener" class="video-card">
+        <div class="video-thumb" style="display:grid;place-items:center"><span class="play" style="position:relative;z-index:1">▶</span><span class="dur">YouTube</span></div>
+        <div class="video-body"><h4>${v.title}</h4><div class="small">Opens a YouTube search</div></div>
+      </a>`).join('');
+    document.getElementById('list').innerHTML=`
+      <div style="grid-column:1/-1">
+        <div class="card" style="text-align:center;padding:22px">
+          <div style="font-size:32px">🔎</div>
+          <h3>No matching guide in TechFix</h3>
+          <p class="muted">We don't have a guide for "<b style="color:var(--navy)">${escHtml(qRaw||'that search')}</b>" yet. Try another keyword (e.g., <b>black screen</b> finds <b>No Display</b>), pick a category, ask the assistant, or watch a video below.</p>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+            <button class="btn primary small" onclick="view('chat',navBtn(2))">💬 Ask Assistant</button>
+            <button class="btn small ghost" onclick="document.getElementById('q').value='';cat='All';render()">Clear search</button>
+            <a href="${searchUrl}" target="_blank" rel="noopener" class="yt-btn">▶ Search on YouTube</a>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin:18px 0 10px"><h2 style="font-size:18px">🎥 Try these YouTube tutorials</h2><p>Opens on YouTube — helpful while we add more guides. “Black screen” videos match “No Display”.</p></div>
+        <div class="video-grid">${cards}</div>
+
+        <div class="card" style="margin-top:14px">
+          <h3 style="margin:0 0 6px">📖 How to use TechFix</h3>
+          <div class="grid" style="margin-top:10px">
+            <div class="card" style="background:var(--bg)"><div class="icon">1️⃣</div><h4 style="margin:8px 0 4px">Search or Browse</h4><p class="small" style="margin:0">Go to <b>Troubleshoot</b> → type a keyword (“no display”, “black screen”, “Wi-Fi”) or tap a category chip. The assistant also understands “black screen” as “No Display”.</p></div>
+            <div class="card" style="background:var(--bg)"><div class="icon">2️⃣</div><h4 style="margin:8px 0 4px">Follow the steps</h4><p class="small" style="margin:0">Open a guide → check <b>Possible causes</b> → tick each <b>Step</b> as you do it. The progress bar shows completion.</p></div>
+            <div class="card" style="background:var(--bg)"><div class="icon">3️⃣</div><h4 style="margin:8px 0 4px">Save favorites & get help</h4><p class="small" style="margin:0">Tap ♥ to save a guide to <b>Favorites</b>. Use the Chat Assistant if you need help finding a matching guide.</p></div>
+          </div>
+          <div class="small" style="margin-top:10px;background:var(--blue-soft);border:1px solid var(--blue-border);border-radius:10px;padding:10px"><b>Tip:</b> Open any guide and choose <b>Print</b> for a handout. The Chat Assistant uses the built-in service when available and falls back to matching the problem against the local guide library.</div>
+        </div>
+
+        <div class="card" style="margin-top:12px;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;align-items:center">
+          <span class="small">Still stuck? Describe your problem in the <b>Chat Assistant</b> — it will suggest the closest guide + YouTube fallback.</span>
+          <a href="${searchUrl}" target="_blank" rel="noopener" class="yt-outline">🔎 More on YouTube →</a>
+        </div>
+      </div>`;
+    return;
+  }
+  document.getElementById('list').innerHTML=a.map(o=>{
+    const x=o.x, i=o.i;
+    const isFav=favs.includes(i);
+    const diff=x[6]||'Beginner';
+    const time=x[7]||'—';
+    return `<div class="card problem hover">
+      <button class="fav ${isFav?'on':''}" onclick="toggleFav(${i});render()" title="Favorite">${isFav?'♥':'♡'}</button>
+      <div class="icon">${escHtml(x[1])}</div><small style="color:var(--blue);font-weight:800">${escHtml(x[0])}</small>
+      <h3>${escHtml(x[2])}</h3><p>${escHtml(x[3])}</p>
+      <div class="meta"><span class="tag ${diff==='Intermediate'?'amber':'green'}">${diff}</span><span class="tag">${time}</span></div>
+      <div class="actions"><button class="btn primary small" style="flex:1" onclick="openP(${i})">View solution →</button></div>
+    </div>`;
+  }).join('');
+}
+
+// ---------- DETAIL ----------
+function openP(i, from){
+  currentId=i; completedSteps=new Set();
+  const x=P[i];
+  document.getElementById('ico').textContent=x[1];
+  document.getElementById('cat2').textContent=x[0];
+  document.getElementById('title').textContent=x[2];
+  document.getElementById('desc').textContent=x[3];
+  const diff=x[6]||'Beginner';
+  document.getElementById('timeMeta').textContent=x[7]||'—';
+  document.getElementById('toolsMeta').textContent=x[8]||'None';
+  const b=document.getElementById('diffBadge'); b.textContent=diff; b.className='tag '+(diff==='Intermediate'?'amber':'green');
+  document.getElementById('causes').innerHTML=(x[4]||[]).map(y=>`<li>${escHtml(y)}</li>`).join('');
+  document.getElementById('steps').innerHTML=(x[5]||[]).map((y,n)=>`<div class="step"><button class="check" onclick="toggleStep(${n})" id="chk${n}">✓</button><div><b>Step ${n+1}</b><div class="muted">${escHtml(y)}</div></div><div class="num">${n+1}</div></div>`).join('');
+  // quick info
+  document.getElementById('quickInfo').innerHTML=`
+    <div class="kv"><span class="muted">Category</span><b>${escHtml(x[0])}</b></div>
+    <div class="kv"><span class="muted">Difficulty</span><b>${diff}</b></div>
+    <div class="kv"><span class="muted">Time</span><b>${escHtml(x[7]||'—')}</b></div>
+    <div class="kv"><span class="muted">Tools</span><b style="font-size:13px">${escHtml(x[8]||'None')}</b></div>`;
+  // related
+  const rel=P.map((v,idx)=>({v,idx})).filter(o=>o.idx!==i && o.v[0]===x[0]).slice(0,3);
+  document.getElementById('related').innerHTML=rel.length? rel.map(o=>`<div class="suggestion" role="button" tabindex="0" onclick="openP(${o.idx})"><b>${escHtml(o.v[2])}</b><div class="small">${escHtml(o.v[3])}</div></div>`).join('') : `<div class="small">No related guides in this category yet.</div>`;
+  // video for this guide — STRICT: only show if truly relevant, otherwise show helpful search
+  const ytQ=encodeURIComponent(x[2]+' fix windows');
+  const vidsStrict=videosForGuide(x[2]);
+  let vHtml='';
+  if(vidsStrict.length){
+    vHtml=vidsStrict.map(v=>`<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="video-card" style="margin:6px 0"><div class="video-thumb" style="display:grid;place-items:center;aspect-ratio:16/7"><span class="play">▶</span><span class="dur">YouTube</span></div><div class="video-body"><h4>${v.title}</h4><div class="small">Opens a YouTube search</div></div></a>`).join('');
+  } else {
+    // No confident match — single search card for this exact problem so it's never wrong
+    const fallbackTitle=x[2]+' — How to Fix (YouTube)';
+    vHtml=`<a href="https://www.youtube.com/results?search_query=${ytQ}" target="_blank" rel="noopener" class="video-card" style="margin:6px 0"><div class="video-thumb" style="display:grid;place-items:center;aspect-ratio:16/7"><span class="play">▶</span><span class="dur">▶</span></div><div class="video-body"><h4>${escHtml(fallbackTitle)}</h4><div class="small">YouTube search</div></div></a>`;
+  }
+  document.getElementById('videoForGuide').innerHTML=`
+    <div class="card" style="background:var(--bg)">
+      <b>🎥 Video tutorials for this problem</b><div class="small" style="margin:4px 0 8px">Opens on YouTube — extra help if the steps aren't enough.</div>
+      <div class="video-grid" style="grid-template-columns:1fr 1fr">${vHtml}</div>
+      <div style="margin-top:8px"><a href="https://www.youtube.com/results?search_query=${ytQ}" target="_blank" rel="noopener" class="yt-btn" style="text-decoration:none">▶ More “${escHtml(x[2])}” on YouTube</a></div>
+    </div>`;
+  updateFavBtn(); updateProgress();
+  pushHistory(i);
+  lastList = from || 'problems';
+  view('detail');
+}
+function toggleStep(n){
+  const el=document.getElementById('chk'+n);
+  if(completedSteps.has(n)){ completedSteps.delete(n); el.classList.remove('on'); }
+  else { completedSteps.add(n); el.classList.add('on'); }
+  updateProgress();
+}
+function updateProgress(){
+  const x=P[currentId]; if(!x) return;
+  const total=(x[5]||[]).length, done=completedSteps.size;
+  const box=document.getElementById('progressBox');
+  if(done===0){ box.style.display='none'; return; }
+  box.style.display='block';
+  box.textContent=`Progress: ${done}/${total} steps completed${done===total?' — great! Check if the issue is resolved.':''}`;
+}
+function getFavs(){ try{return JSON.parse(localStorage.getItem('techfix_favs')||'[]')}catch{return[]} }
+function setFavs(v){ localStorage.setItem('techfix_favs', JSON.stringify(v)); updateFavCount(); }
+function toggleFav(i){
+  const favs=getFavs(); const idx=favs.indexOf(i);
+  if(idx>-1) favs.splice(idx,1); else favs.push(i);
+  setFavs(favs); updateFavBtn(); renderFavs();
+}
+function updateFavBtn(){
+  if(currentId==null) return;
+  const on=getFavs().includes(currentId);
+  const b=document.getElementById('favBtn'); if(!b) return;
+  b.textContent= on? '♥ Favorited' : '♡ Favorite';
+  b.style.background= on? 'var(--red-soft)':'#fff'; b.style.borderColor= on? 'var(--red-bd)':'var(--border)'; b.style.color= on? 'var(--red)':'var(--navy)';
+}
+function updateFavCount(){ const c=getFavs().length; const el=document.getElementById('favCount'); if(el) el.textContent=c; }
+function renderFavs(){
+  const favs=getFavs(); updateFavCount();
+  const list=document.getElementById('favList'), empty=document.getElementById('favEmpty');
+  if(!favs.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  list.innerHTML=favs.filter(i=>P[i]).map(i=>{
+    const x=P[i]; return `<div class="card problem"><div class="icon">${escHtml(x[1])}</div><small style="color:var(--blue);font-weight:800">${escHtml(x[0])}</small><h3>${escHtml(x[2])}</h3><p>${escHtml(x[3])}</p><div class="actions"><button class="btn primary small" style="flex:1" onclick="openP(${i},'favorites')">Open →</button><button class="btn ghost small" onclick="toggleFav(${i});renderFavs()">Remove</button></div></div>`;
+  }).join('');
+}
+function getHistory(){ try{return JSON.parse(localStorage.getItem('techfix_history')||'[]')}catch{return[]} }
+function pushHistory(i){
+  let h=getHistory().filter(v=>v!==i); h.unshift(i); h=h.slice(0,12);
+  localStorage.setItem('techfix_history', JSON.stringify(h));
+}
+function renderRecent(){
+  const el=document.getElementById('recentRow'); if(!el) return;
+  const h=getHistory().filter(i=>P[i]).slice(0,6);
+  if(!h.length){ el.innerHTML=''; return; }
+  el.innerHTML=`<div class="recent"><span class="small" style="font-weight:700">Recently viewed</span><div class="recent-row">`
+    + h.map(i=>`<span class="rchip" role="button" tabindex="0" onclick="openP(${i},'problems')">${escHtml(P[i][1])} ${escHtml(P[i][2])}</span>`).join('')
+    + `</div></div>`;
+}
+function feedback(yes){
+  const msg=yes? 'Thanks! Glad it helped. Your feedback is saved on this device only.' : 'Noted. Try the next step or describe your case in Chat Assistant to find another guide.';
+  const b=document.getElementById('progressBox'); b.style.display='block'; b.textContent=msg;
+  try{ const k='techfix_feedback'; const arr=JSON.parse(localStorage.getItem(k)||'[]'); arr.push({id:currentId, yes, at:new Date().toISOString()}); localStorage.setItem(k, JSON.stringify(arr)); }catch(e){}
+}
+function shareDetail(){
+  const x=P[currentId]; const text=`TechFix: ${x[2]} — ${x[3]}`;
+  if(navigator.share){ navigator.share({title:x[2], text}).catch(()=>{}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard!')).catch(()=>alert(text)); }
+  else alert(text);
+}
+
+// ===============================================================
+// CHATBOT — API + offline keyword fallback + black-screen alias
+// ===============================================================
+function scoreGuide(query, guide){
+  const q=tokens(query); if(!q.length) return 0;
+  const hay=normalizeQuery(guide.join(' ')).toLowerCase();
+  let sc=0;
+  for(const w of q){ if(hay.includes(w)) sc+=2; }
+  const title=normalizeQuery(guide[2]).toLowerCase();
+  for(const w of q){ if(title.includes(w)) sc+=2.5; }
+  return sc;
+}
+function findBest(query){
+  let best=-1, bestScore=0;
+  for(let i=0;i<P.length;i++){ const s=scoreGuide(query, P[i]); if(s>bestScore){bestScore=s; best=i;} }
+  return bestScore>=2? best : -1;
+}
+
+// ---------- BUILT-IN ASSISTANT SERVICE ----------
+function setAiStatus(label, ok){
+  const statusEl=document.getElementById('aiStatus');
+  if(!statusEl) return;
+  statusEl.textContent=label;
+  statusEl.style.background=ok?'var(--green-bg)':'var(--bg)';
+  statusEl.style.borderColor=ok?'var(--green-bd)':'var(--border)';
+  statusEl.style.color=ok?'var(--green-tx)':'var(--muted)';
+}
+async function pingBuiltInAI(){
+  try{
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ping:true})});
+    if(res.status===200 || res.status===400){ setAiStatus('Built-in assistant available', true); return; }
+  }catch(e){}
+  setAiStatus('Offline guide matcher ready', false);
+}
+function updateAIStatus(){
+  setAiStatus('Checking assistant…', false);
+  pingBuiltInAI();
+}
+// Conversation memory per chat box so follow-ups ("still not working") build on earlier answers
+const chatHistory={chatLog:[],miniLog:[]};
+async function callAI(userQuery, containerId){
+  // API credentials stay server-side; visitors are never asked to enter personal keys.
+  const guidesList=P.map((g,i)=>`${i+1}. ${g[2]} [${g[0]}] — ${g[3]} Possible causes: ${(g[4]||[]).join('; ')}. Steps: ${(g[5]||[]).join(' ')}`).join('\n');
+  const history=(chatHistory[containerId]||[]).slice(-8);
+  const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:userQuery,guides:guidesList,history})});
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok || (!data.text && !data.reply)) throw new Error(data.error || ('Built-in assistant unavailable ('+res.status+').'));
+  return data;
+}
+function ytSearchUrl(q){ return `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`; }
+// Normal conversation (greetings, thanks, concept questions) — plain reply, no troubleshooting cards
+function renderChatReply(r){
+  const lines=escHtml(r.message).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').split('\n');
+  let html='', inList=false;
+  for(const ln of lines){
+    const m=ln.match(/^\s*[-•*]\s+(.*)/);
+    if(m){ if(!inList){html+='<ul style="margin:4px 0;padding-left:20px">';inList=true;} html+=`<li>${m[1]}</li>`; continue; }
+    if(inList){html+='</ul>';inList=false;}
+    html+=ln.trim()?ln+'<br>':'<br>';
+  }
+  if(inList) html+='</ul>';
+  html=html.replace(/(<br>)+$/,'');
+  const vids=(Array.isArray(r.videos)?r.videos:[]).filter(v=>v&&v.query).slice(0,3);
+  if(vids.length) html+=`<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">`+vids.map(v=>`<a href="${ytSearchUrl(v.query)}" target="_blank" rel="noopener" class="yt-outline" style="text-decoration:none">▶ ${escHtml(v.title||v.query)}</a>`).join('')+`</div>`;
+  return html;
+}
+function renderAIReply(r, query){
+  const list=a=>Array.isArray(a)?a.filter(Boolean):[];
+  const box='background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:10px';
+  let html='';
+  const tags=[r.category?`<span class="tag blue" style="font-size:11px">${escHtml(r.category)}</span>`:'', r.difficulty?`<span class="tag ${r.difficulty==='Beginner'?'green':'amber'}" style="font-size:11px">${escHtml(r.difficulty)}</span>`:''].join(' ');
+  html+=`<b>🔍 What's likely wrong:</b> ${escHtml(r.problem||'')} ${tags}`;
+  const causes=list(r.causes);
+  if(causes.length){
+    html+=`<div style="${box}"><b>🧩 Problem breakdown</b> <span class="small">(most likely first)</span><ol style="margin:6px 0 0;padding-left:20px">`+
+      causes.map(c=>`<li><b>${escHtml(c.cause||c)}</b>${c.check?`<br><span class="small">Check: ${escHtml(c.check)}</span>`:''}</li>`).join('')+`</ol></div>`;
+  }
+  const steps=list(r.steps);
+  if(steps.length){
+    html+=`<div style="${box}"><b>🛠️ Try these steps</b><ol style="margin:6px 0 0;padding-left:20px">`+
+      steps.map(s=>`<li>${escHtml(s.do||s)}${s.why?`<br><span class="small muted">Why: ${escHtml(s.why)}</span>`:''}</li>`).join('')+`</ol></div>`;
+  }
+  if(r.lesson) html+=`<div style="${box};background:var(--blue-soft);border-color:var(--blue-border)"><b style="color:var(--blue)">📘 Quick lesson</b><br>${escHtml(r.lesson)}</div>`;
+  const vids=list(r.videos).filter(v=>v.query).slice(0,3);
+  if(!vids.length) vids.push({title:query+' — tutorial',query:query+' computer troubleshooting'});
+  html+=`<div style="${box}"><b>🎥 Learn on YouTube</b>`+vids.map(v=>`<a href="${ytSearchUrl(v.query)}" target="_blank" rel="noopener" style="display:flex;gap:10px;align-items:center;border:1px solid var(--border);border-radius:10px;padding:8px;margin:6px 0 0;background:#fff;text-decoration:none;color:inherit"><span style="width:34px;height:34px;border-radius:8px;background:#ff0000;color:#fff;display:grid;place-items:center;flex-shrink:0">▶</span><span><b style="font-size:13px">${escHtml(v.title||v.query)}</b><br><span class="small">Opens a YouTube search</span></span></a>`).join('')+`</div>`;
+  if(r.askTeacher) html+=`<div class="warn" style="margin-top:10px">⚠️ ${escHtml(r.askTeacher)}</div>`;
+  // Link to the matching TechFix guide (AI-named first, then local match)
+  let gi=-1;
+  if(r.guide){ const g=String(r.guide).toLowerCase(); gi=P.findIndex(x=>x[2].toLowerCase()===g); if(gi<0) gi=P.findIndex(x=>g.includes(x[2].toLowerCase())||x[2].toLowerCase().includes(g)); }
+  if(gi<0) gi=findBest(query);
+  const btns=[];
+  if(gi>-1) btns.push(`<button class="btn primary small" onclick="openP(${gi})">Open guide: ${escHtml(P[gi][2])} →</button>`);
+  btns.push(`<button class="btn ghost small" onclick="askChat('I tried those steps, still not working')">Still not working?</button>`);
+  if(r.followUp) html+=`<div style="margin-top:10px"><b>❓ ${escHtml(r.followUp)}</b></div>`;
+  html+=`<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">${btns.join('')}</div>`;
+  return html;
+}
+// Compact text version of a reply, kept as conversation memory
+function replySummary(r){
+  const parts=[`Problem: ${r.problem||''}`];
+  if(Array.isArray(r.causes)) parts.push('Causes: '+r.causes.map(c=>c.cause||c).join('; '));
+  if(Array.isArray(r.steps)) parts.push('Steps given: '+r.steps.map(s=>s.do||s).join(' | '));
+  if(r.followUp) parts.push('Asked: '+r.followUp);
+  return parts.join('\n');
+}
+
+function localChatReply(query){
+  // Greetings / thanks / small talk get a normal reply, not a guide search
+  const small=query.toLowerCase().replace(/[^a-z\s']/g,' ').trim();
+  if(/^(hi+|hello+|hey+|yo|good (morning|afternoon|evening)|kumusta|kamusta|musta|hoy|uy|sup)( po| there| techfix| bot)?$/.test(small))
+    return {type:'chat', html:"Hi! 👋 How can I help you today? Tell me what's happening with your computer, like <b>no display</b>, <b>slow PC</b>, or <b>Wi-Fi not connecting</b>."};
+  if(/^(thanks?|thank you( so much| po)?|salamat( po)?|ty|ok(ay)?|nice|cool|got it)$/.test(small))
+    return {type:'chat', html:"You're welcome! 😊 Let me know if you run into another problem."};
+  const idx=findBest(query);
+  if(idx>-1){
+    const x=P[idx];
+    return {type:'guide', idx, html:`I found a close match: <b>${escHtml(x[2])}</b> <span class="tag blue" style="font-size:11px">${escHtml(x[0])}</span><br><span class="small">${escHtml(x[3])}</span><br><br><b>Quick steps:</b><br>1. ${escHtml(x[5][0])}<br>2. ${escHtml(x[5][1]||'')}<br><br><button class="btn primary small" onclick="openP(${idx})">Open full guide →</button> <button class="btn ghost small" onclick="askChat('still not working')">Still not working?</button>`};
+  }
+  const ytQ=encodeURIComponent(query + ' computer troubleshooting');
+  const searchUrl=`https://www.youtube.com/results?search_query=${ytQ}`;
+  const vids=youtubeForQuery(query).slice(0,2);
+  const vHtml=vids.map(v=>`<a href="${ytUrl(v)}" target="_blank" rel="noopener" style="display:flex;gap:10px;align-items:center;border:1px solid var(--border);border-radius:10px;padding:10px;margin:6px 0;background:#fff;text-decoration:none;color:inherit"><span style="width:42px;height:42px;border-radius:9px;background:#ff0000;color:#fff;display:grid;place-items:center;flex-shrink:0">▶</span><span><b style="font-size:13px">${v.title}</b><br><span class="small">Opens a YouTube search</span></span></a>`).join('');
+  const cats=[...new Set(P.map(x=>x[0]))].join(', ');
+  return {type:'nomatch', html:`I couldn't find an exact guide for "<b>${escHtml(query)}</b>".<br><br><div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px"><b>🎥 Try these YouTube tutorials:</b>${vHtml}<a href="${searchUrl}" target="_blank" rel="noopener" class="yt-btn" style="margin-top:6px;display:inline-flex;text-decoration:none">▶ More on YouTube</a></div><br><span class="small">Tip: “black screen” and “blank screen” also find <b>No Display</b>. Categories: ${cats}. Or <a href="#" onclick="view('problems',navBtn(1));return false" style="font-weight:800">browse all guides</a></span>`};
+}
+
+function appendBubble(html, who='bot', containerId='chatLog'){
+  const log=document.getElementById(containerId);
+  if(!log) return;
+  const d=document.createElement('div'); d.className='bubble '+(who==='me'?'me':'bot'); d.innerHTML=html;
+  log.appendChild(d); log.scrollTop=log.scrollHeight; return d;
+}
+function showTyping(containerId){
+  const log=document.getElementById(containerId);
+  const d=document.createElement('div'); d.className='bubble bot typing'; d.id=containerId+'_typing'; d.textContent='TechFix is thinking...';
+  log.appendChild(d); log.scrollTop=log.scrollHeight;
+}
+function hideTyping(containerId){
+  const el=document.getElementById(containerId+'_typing'); if(el) el.remove();
+}
+
+async function handleChat(query, containerId){
+  // AI first (built-in or personal key); falls back to offline keyword matching on error
+  showTyping(containerId);
+  try{
+    const data=await callAI(query, containerId);
+    hideTyping(containerId);
+    let html, memo;
+    if(data.reply && data.reply.mode==='chat' && data.reply.message){
+      html=renderChatReply(data.reply);
+      memo=data.reply.message;
+    }else if(data.reply && data.reply.problem){
+      html=renderAIReply(data.reply, query);
+      memo=replySummary(data.reply);
+    }else{
+      const aiText=data.text||'';
+      html=escHtml(aiText).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+      html+=`<br><br><a href="${ytSearchUrl(query+' computer troubleshooting')}" target="_blank" rel="noopener" class="yt-outline" style="text-decoration:none">▶ Related on YouTube</a>`;
+      memo=aiText;
+    }
+    const h=chatHistory[containerId]||(chatHistory[containerId]=[]);
+    h.push({role:'user',content:query},{role:'assistant',content:memo});
+    if(h.length>12) h.splice(0,h.length-12);
+    appendBubble(html,'bot',containerId);
+    return;
+  }catch(e){
+    hideTyping(containerId);
+    // Fall back to the local guide matcher if the built-in service is unavailable.
+    const local=localChatReply(query);
+    const note=`<br><br><span class="small muted">The built-in service is unavailable, so this reply comes from the local TechFix guide library. Check the steps carefully and ask your CSS teacher for advanced issues.</span>`;
+    appendBubble(local.type==='chat' ? local.html : local.html + note,'bot',containerId);
+    return;
+  }
+}
+
+async function sendChat(){
+  const inp=document.getElementById('chatInput'); const q=inp.value.trim(); if(!q) return;
+  appendBubble(escHtml(q),'me','chatLog'); inp.value='';
+  await handleChat(q,'chatLog');
+}
+async function sendMini(){
+  const inp=document.getElementById('miniInput'); const q=inp.value.trim(); if(!q) return;
+  appendBubble(escHtml(q),'me','miniLog'); inp.value='';
+  await handleChat(q,'miniLog');
+}
+function askChat(q){
+  const inp=document.getElementById('chatInput');
+  if(inp) inp.value=q;
+  view('chat',navBtn(2));
+  // small delay so view renders, then send
+  setTimeout(()=>{ if(q) { appendBubble(escHtml(q),'me','chatLog'); handleChat(q,'chatLog'); if(inp) inp.value=''; } }, 180);
+}
+let miniOpen=false;
+function toggleMini(){ miniOpen=!miniOpen; document.getElementById('miniChat').classList.toggle('open', miniOpen); if(miniOpen) document.getElementById('miniInput').focus(); }
+
+// ---------- NAV / A11Y / PWA ----------
+function toggleNav(btn){
+  const nav=document.querySelector('nav');
+  const open=nav.classList.toggle('open');
+  if(btn) btn.setAttribute('aria-expanded', open?'true':'false');
+}
+function toast(msg){
+  let t=document.getElementById('tfToast');
+  if(!t){ t=document.createElement('div'); t.id='tfToast';
+    t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 16px;border-radius:12px;box-shadow:var(--shadow2);z-index:200;font-weight:700;font-size:13.5px;max-width:90vw;opacity:0;transition:opacity .2s';
+    document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._to); t._to=setTimeout(()=>{ t.style.opacity='0'; },2600);
+}
+// Enter / Space activates non-button clickable elements marked role="button"
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'||e.key===' '){
+    const t=e.target;
+    if(t && t.getAttribute && t.getAttribute('role')==='button' && t.hasAttribute('tabindex') && t.tagName!=='BUTTON' && t.tagName!=='A'){
+      e.preventDefault(); t.click();
+    }
+  }
+});
+// Register the service worker for true offline use (skipped on file://)
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+
+// ---------- INIT ----------
+try{ localStorage.removeItem('techfix_ai'); }catch(e){}
+renderHomeExtras(); render(); updateFavCount(); updateAIStatus();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "techfix",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TechFix — web-based computer troubleshooting assistant for Grade 12 CSS students",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

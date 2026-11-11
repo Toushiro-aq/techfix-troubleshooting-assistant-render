@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: techfix
+    runtime: node
+    plan: free
+    buildCommand: echo "nothing to build"
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false   # paste your free key from aistudio.google.com in the Render dashboard
