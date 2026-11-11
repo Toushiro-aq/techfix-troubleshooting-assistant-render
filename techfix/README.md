@@ -15,7 +15,14 @@ Set ONE of these environment variables:
 
 Optional: `GEMINI_MODEL` (default `gemini-3.5-flash`), `ANTHROPIC_MODEL`, `RATE_LIMIT_PER_MIN`.
 
+Reliability: Gemini calls are retried when busy, and `GEMINI_FALLBACK_MODEL` (optional) is tried if the main model keeps failing. The real reason for any failure is printed in the Render **Logs** tab.
+
 If Gemini answers with "limit: 0" or a model error, change `GEMINI_MODEL` to another free Flash model listed in AI Studio.
+
+## Features added
+
+- Chat history is saved in the visitor's own browser (localStorage) and restored after a refresh. "Clear chat" removes it.
+- Dark / light mode button in the header. First visit follows the device setting; the choice is remembered.
 
 ## Run locally
 

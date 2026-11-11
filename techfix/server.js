@@ -78,7 +78,7 @@ For "troubleshoot":
   "followUp": "one short question to narrow down the issue, or empty string",
   "askTeacher": "when to stop and ask a teacher/technician, or empty string"
 }
-For troubleshoot, keep causes to 2–4 and steps to 3–6. Each string under ~25 words. Always answer in the same language style the student used: plain English if they wrote in English, Taglish/Filipino only if they did.`
+The JSON must be complete and valid (escape any quotes inside strings, never leave it unfinished). For troubleshoot, keep causes to 2–4 and steps to 3–6. Each string under ~25 words. Always answer in the same language style the student used: plain English if they wrote in English, Taglish/Filipino only if they did.`
 
 function clean(s, max) {
   return String(s ?? '').slice(0, max)
@@ -88,11 +88,15 @@ function parseReply(raw) {
   const start = raw.indexOf('{')
   const end = raw.lastIndexOf('}')
   if (start === -1 || end <= start) return null
-  try {
-    return JSON.parse(raw.slice(start, end + 1))
-  } catch {
-    return null
+  const chunk = raw.slice(start, end + 1)
+  // Try as-is, then repair common model slips: raw line breaks inside strings, trailing commas
+  const attempts = [chunk, chunk.replace(/[\u0000-\u001F]+/g, ' '), chunk.replace(/[\u0000-\u001F]+/g, ' ').replace(/,\s*([}\]])/g, '$1')]
+  for (const a of attempts) {
+    try {
+      return JSON.parse(a)
+    } catch {}
   }
+  return null
 }
 
 function send(res, status, data) {
@@ -130,32 +134,71 @@ function failMessage(status) {
   return status === 429 ? 'Too many requests right now — try again in a minute.' : `AI service error (${status}).`
 }
 
+const GEMINI_FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || ''
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+// One request to one Gemini model. Throws {status, detail} on failure.
+async function geminiOnce(model, system, contents) {
+  let res
+  try {
+    res = await fetch(`${GEMINI_BASE}/v1beta/models/${model}:generateContent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEY },
+      signal: AbortSignal.timeout(25_000),
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system }] },
+        contents,
+        generationConfig: { maxOutputTokens: 4096, responseMimeType: 'application/json' },
+      }),
+    })
+  } catch (e) {
+    throw { status: 0, detail: e?.name === 'TimeoutError' ? 'timed out after 25s' : String(e?.message || e) }
+  }
+  if (!res.ok) {
+    const body = await res.text().catch(() => '')
+    let detail = body.slice(0, 300)
+    try { detail = JSON.parse(body)?.error?.message || detail } catch {}
+    throw { status: res.status, detail }
+  }
+  const data = await res.json()
+  const cand = data?.candidates?.[0]
+  const text = (cand?.content?.parts || [])
+    .filter((p) => typeof p.text === 'string' && !p.thought)
+    .map((p) => p.text)
+    .join('')
+    .trim()
+  if (!text) throw { status: 0, detail: `empty reply (finishReason=${cand?.finishReason || 'none'}, blocked=${data?.promptFeedback?.blockReason || 'no'})` }
+  if (cand?.finishReason === 'MAX_TOKENS') throw { status: 0, detail: 'reply was cut off (MAX_TOKENS)' }
+  return text
+}
+
+// Retries short hiccups (busy / rate limit / timeout), then tries the optional fallback model.
 async function callGemini(system, history, query) {
   const contents = [...history, { role: 'user', content: query }].map((t) => ({
     role: t.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: t.content }],
   }))
-  const res = await fetch(`${GEMINI_BASE}/v1beta/models/${GEMINI_MODEL}:generateContent`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEY },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: system }] },
-      contents,
-      generationConfig: { maxOutputTokens: 2048, responseMimeType: 'application/json' },
-    }),
-  })
-  if (!res.ok) {
-    const detail = await res.text().catch(() => '')
-    console.error('Gemini API error', res.status, detail.slice(0, 500))
-    throw new AIError(502, failMessage(res.status))
+  const models = [GEMINI_MODEL, ...(GEMINI_FALLBACK_MODEL && GEMINI_FALLBACK_MODEL !== GEMINI_MODEL ? [GEMINI_FALLBACK_MODEL] : [])]
+  let last = { status: 0, detail: 'unknown' }
+  for (const model of models) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        return await geminiOnce(model, system, contents)
+      } catch (err) {
+        last = err
+        console.error(`Gemini ${model} attempt ${attempt + 1} failed:`, err.status, err.detail)
+        const retryable = err.status === 0 || err.status === 429 || err.status >= 500
+        if (!retryable) break // bad key, bad model name, bad request: retrying will not help
+        if (err.status === 429 && attempt >= 1) break // limit likely used up, move on
+        if (attempt < 2) await sleep(1200 * (attempt + 1))
+      }
+    }
   }
-  const data = await res.json()
-  const parts = data?.candidates?.[0]?.content?.parts || []
-  return parts
-    .filter((p) => typeof p.text === 'string' && !p.thought)
-    .map((p) => p.text)
-    .join('')
-    .trim()
+  let msg = 'The AI is having trouble right now.'
+  if (last.status === 429) msg = 'The AI is busy (free limit reached) — try again in a minute.'
+  else if (last.status === 400 || last.status === 401 || last.status === 403) msg = 'The AI key or settings need fixing (check GEMINI_API_KEY).'
+  else if (last.status === 404) msg = 'The AI model name was not found (check GEMINI_MODEL).'
+  throw new AIError(502, msg)
 }
 
 async function callAnthropic(system, history, query) {
@@ -164,7 +207,7 @@ async function callAnthropic(system, history, query) {
     headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({
       model: ANTHROPIC_MODEL,
-      max_tokens: 1200,
+      max_tokens: 2500,
       system,
       messages: [...history, { role: 'user', content: query }],
     }),
@@ -175,6 +218,7 @@ async function callAnthropic(system, history, query) {
     throw new AIError(502, failMessage(res.status))
   }
   const data = await res.json()
+  if (data?.stop_reason === 'max_tokens') return '' // cut off: treated as a broken reply and retried
   return (data?.content || [])
     .filter((b) => b.type === 'text')
     .map((b) => b.text)
@@ -191,7 +235,7 @@ async function handleChat(req, res) {
   } catch {
     return send(res, 400, { error: 'Invalid JSON body.' })
   }
-  if (body?.ping) return send(res, 200, { ok: true })
+  if (body?.ping) return send(res, 200, { ok: true, configured: Boolean(GEMINI_KEY || ANTHROPIC_KEY) })
 
   const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim()
   if (rateLimited(ip)) return send(res, 429, { error: 'Too many requests right now — try again in a minute.' })
@@ -217,12 +261,15 @@ async function handleChat(req, res) {
   const system = `${SYSTEM}\n\nTechFix guides available:\n${guides}`
 
   try {
-    const raw = GEMINI_KEY ? await callGemini(system, history, query) : await callAnthropic(system, history, query)
-    if (!raw) return send(res, 502, { error: 'Empty AI reply.' })
-
-    const reply = parseReply(raw)
-    // `text` is kept so the chat still works if the reply wasn't valid JSON
-    return send(res, 200, { text: reply ? reply.message || reply.problem || '' : raw, reply })
+    // Ask up to twice: if the AI's JSON comes back broken or cut off, try once more.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const raw = GEMINI_KEY ? await callGemini(system, history, query) : await callAnthropic(system, history, query)
+      const reply = raw ? parseReply(raw) : null
+      if (reply) return send(res, 200, { text: reply.message || reply.problem || '', reply })
+      console.error(`AI reply was not valid JSON (attempt ${attempt + 1}):`, String(raw).slice(0, 200))
+    }
+    // Never show raw JSON to the student: the page falls back to the offline guide matcher.
+    return send(res, 502, { error: 'The AI reply was incomplete — please try again.' })
   } catch (e) {
     if (e instanceof AIError) return send(res, e.status, { error: e.userMessage })
     console.error('AI request failed', e)

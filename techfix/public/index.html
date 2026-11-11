@@ -69,6 +69,8 @@ img{max-width:100%}
 header{position:sticky;top:0;z-index:40;background:var(--header-bg);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 5%;}
 .logo{font-weight:900;font-size:22px;letter-spacing:-.5px;color:var(--blue-ink);display:flex;align-items:center;gap:8px}
 .logo span{color:var(--navy)}
+a.chat-link{font-weight:800;color:var(--blue-ink);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+a.chat-link:hover{opacity:.8}
 a.logo{cursor:pointer;transition:opacity .15s,transform .15s}
 a.logo:hover{opacity:.85}
 a.logo:active{transform:scale(.97)}
@@ -351,8 +353,8 @@ footer{text-align:center;color:var(--muted);padding:28px 10px;font-size:12.5px;b
         <div class="warn" style="margin-top:14px">⚠️ Safety: Unplug or ask your teacher before opening any computer case. Stop and ask a qualified technician for board-level, power supply, or advanced networking repair. This guide covers <b>basic</b> procedures only.</div>
         <div class="good" style="margin-top:10px">✅ If the problem is fixed, you can stop. If not, try the next step or ask for help. Use “Did this guide help?” to record feedback on this device.</div>
         <div class="card" style="margin-top:12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-          <div><b>Did this guide help?</b><div class="small">Your response is saved on this device only.</div></div>
-          <div style="display:flex;gap:8px"><button class="btn small ghost" onclick="feedback(true)">👍 Yes</button><button class="btn small ghost" onclick="feedback(false)">👎 Not yet</button></div>
+          <div><b>Did this guide help?</b><div id="fbNote" class="small" role="status" aria-live="polite">Your response is saved on this device only.</div></div>
+          <div style="display:flex;gap:8px"><button id="fbYes" class="btn small ghost" onclick="feedback(true)">👍 Yes</button><button id="fbNo" class="btn small ghost" onclick="feedback(false)">👎 Not yet</button></div>
         </div>
       </div>
       <div>
@@ -432,7 +434,7 @@ footer{text-align:center;color:var(--muted);padding:28px 10px;font-size:12.5px;b
       </div>
       <div class="card">
         <h3>Using TechFix</h3>
-        <p class="muted" style="font-size:13.5px">Search for a problem, open the matching guide, review possible causes, and follow the basic steps one at a time. If a guide does not match your issue, try another keyword or use the Chat Assistant.</p>
+        <p class="muted" style="font-size:13.5px">Search for a problem, open the matching guide, review possible causes, and follow the basic steps one at a time. If a guide does not match your issue, try another keyword or use the <a href="#" class="chat-link" onclick="view('chat',navBtn(2));return false">Chat Assistant</a>.</p>
         <h3>Researchers</h3>
         <p class="muted">Grade 12 CSS Researchers • S.Y. 2026–2027<br>Paliparan 3 Senior High School<br>City of Dasmariñas, Cavite</p>
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
@@ -670,13 +672,13 @@ function render(){
           <div class="grid" style="margin-top:10px">
             <div class="card" style="background:var(--bg)"><div class="icon">1️⃣</div><h4 style="margin:8px 0 4px">Search or Browse</h4><p class="small" style="margin:0">Go to <b>Troubleshoot</b> → type a keyword (“no display”, “black screen”, “Wi-Fi”) or tap a category chip. The assistant also understands “black screen” as “No Display”.</p></div>
             <div class="card" style="background:var(--bg)"><div class="icon">2️⃣</div><h4 style="margin:8px 0 4px">Follow the steps</h4><p class="small" style="margin:0">Open a guide → check <b>Possible causes</b> → tick each <b>Step</b> as you do it. The progress bar shows completion.</p></div>
-            <div class="card" style="background:var(--bg)"><div class="icon">3️⃣</div><h4 style="margin:8px 0 4px">Save favorites & get help</h4><p class="small" style="margin:0">Tap ♥ to save a guide to <b>Favorites</b>. Use the Chat Assistant if you need help finding a matching guide.</p></div>
+            <div class="card" style="background:var(--bg)"><div class="icon">3️⃣</div><h4 style="margin:8px 0 4px">Save favorites & get help</h4><p class="small" style="margin:0">Tap ♥ to save a guide to <b>Favorites</b>. Use the <a href="#" class="chat-link" onclick="view('chat',navBtn(2));return false">Chat Assistant</a> if you need help finding a matching guide.</p></div>
           </div>
-          <div class="small" style="margin-top:10px;background:var(--blue-soft);border:1px solid var(--blue-border);border-radius:10px;padding:10px"><b>Tip:</b> Open any guide and choose <b>Print</b> for a handout. The Chat Assistant uses the built-in service when available and falls back to matching the problem against the local guide library.</div>
+          <div class="small" style="margin-top:10px;background:var(--blue-soft);border:1px solid var(--blue-border);border-radius:10px;padding:10px"><b>Tip:</b> Open any guide and choose <b>Print</b> for a handout. The <a href="#" class="chat-link" onclick="view('chat',navBtn(2));return false">Chat Assistant</a> uses the built-in service when available and falls back to matching the problem against the local guide library.</div>
         </div>
 
         <div class="card" style="margin-top:12px;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;align-items:center">
-          <span class="small">Still stuck? Describe your problem in the <b>Chat Assistant</b> — it will suggest the closest guide + YouTube fallback.</span>
+          <span class="small">Still stuck? Describe your problem in the <a href="#" class="chat-link" onclick="view('chat',navBtn(2));return false">Chat Assistant</a> — it will suggest the closest guide + YouTube fallback.</span>
           <a href="${searchUrl}" target="_blank" rel="noopener" class="yt-outline">🔎 More on YouTube →</a>
         </div>
       </div>`;
@@ -699,7 +701,7 @@ function render(){
 
 // ---------- DETAIL ----------
 function openP(i, from){
-  currentId=i; completedSteps=new Set();
+  currentId=i; completedSteps=new Set(); resetFeedback();
   const x=P[i];
   document.getElementById('ico').textContent=x[1];
   document.getElementById('cat2').textContent=x[0];
@@ -793,9 +795,17 @@ function renderRecent(){
     + h.map(i=>`<span class="rchip" role="button" tabindex="0" onclick="openP(${i},'problems')">${escHtml(P[i][1])} ${escHtml(P[i][2])}</span>`).join('')
     + `</div></div>`;
 }
+const FB_DEFAULT='Your response is saved on this device only.';
+function resetFeedback(){
+  const n=document.getElementById('fbNote'); if(n){ n.textContent=FB_DEFAULT; n.style.color=''; n.style.fontWeight=''; }
+  ['fbYes','fbNo'].forEach(id=>{ const b=document.getElementById(id); if(b){ b.style.borderColor=''; b.style.background=''; b.setAttribute('aria-pressed','false'); } });
+}
 function feedback(yes){
-  const msg=yes? 'Thanks! Glad it helped. Your feedback is saved on this device only.' : 'Noted. Try the next step or describe your case in Chat Assistant to find another guide.';
-  const b=document.getElementById('progressBox'); b.style.display='block'; b.textContent=msg;
+  const msg=yes? 'Thanks! Glad it helped. Your feedback is saved on this device only.' : 'Noted. Try the next step or describe your case in the <a href="#" class="chat-link" onclick="view(\'chat\',navBtn(2));return false">Chat Assistant</a> to find another guide.';
+  resetFeedback();
+  const n=document.getElementById('fbNote'); if(n){ n.innerHTML=msg; n.style.color=yes?'var(--green-tx)':'var(--amber-tx)'; n.style.fontWeight='700'; }
+  const chosen=document.getElementById(yes?'fbYes':'fbNo');
+  if(chosen){ chosen.style.borderColor=yes?'var(--green-bd)':'var(--amber-bd)'; chosen.style.background=yes?'var(--green-bg)':'var(--amber-bg)'; chosen.setAttribute('aria-pressed','true'); }
   try{ const k='techfix_feedback'; const arr=JSON.parse(localStorage.getItem(k)||'[]'); arr.push({id:currentId, yes, at:new Date().toISOString()}); localStorage.setItem(k, JSON.stringify(arr)); }catch(e){}
 }
 function shareDetail(){
@@ -835,7 +845,8 @@ function setAiStatus(label, ok){
 async function pingBuiltInAI(){
   try{
     const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ping:true})});
-    if(res.status===200 || res.status===400){ setAiStatus('Built-in assistant available', true); return; }
+    const d=await res.json().catch(()=>({}));
+    if((res.status===200 && d.configured!==false) || res.status===400){ setAiStatus('Built-in assistant available', true); return; }
   }catch(e){}
   setAiStatus('Offline guide matcher ready', false);
 }
@@ -852,6 +863,8 @@ async function callAI(userQuery, containerId){
   const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:userQuery,guides:guidesList,history})});
   const data=await res.json().catch(()=>({}));
   if(!res.ok || (!data.text && !data.reply)) throw new Error(data.error || ('Built-in assistant unavailable ('+res.status+').'));
+  // Safety net: never show raw JSON to the student — use the offline guide matcher instead
+  if(!data.reply){ const t=String(data.text||'').trim(); if(/^[\[{`]/.test(t) || t.indexOf('"mode"')>-1) throw new Error('The assistant reply was incomplete.'); }
   return data;
 }
 function ytSearchUrl(q){ return `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`; }
